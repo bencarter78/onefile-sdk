@@ -3,8 +3,6 @@
 namespace Onefile;
 
 use GuzzleHttp\Client as HttpClient;
-use Onefile\Models\Classroom;
-use Onefile\Models\Placement;
 
 class Client
 {
@@ -63,61 +61,23 @@ class Client
     }
 
     /**
-     * @param $centreId
-     * @param $roleId
-     * @return mixed
-     */
-    public function searchUsers($params)
-    {
-        return $this->makeRequest('post', 'User/Search', $params);
-    }
-
-    /**
-     * @param $id
-     * @param $centreId
-     * @return mixed
-     */
-    public function classroom($id, $centreId)
-    {
-        return $this->makeRequest('get', "Classroom/$id", ['OrganisationID' => $centreId]);
-    }
-
-    /**
-     * @param $classroom
-     * @return mixed
-     */
-    public function classrooms(Classroom $classroom)
-    {
-        return $this->requestFromCentre('Classroom/Search', $classroom);
-    }
-
-    /**
-     * @param $id
-     * @param $centreId
-     * @return mixed
-     */
-    public function placement($id, $centreId)
-    {
-        return $this->makeRequest('get', "Placement/$id", ['OrganisationID' => $centreId]);
-    }
-
-    /**
-     * @param $placement
-     * @return mixed
-     */
-    public function placements(Placement $placement)
-    {
-        return $this->requestFromCentre('Placement/Search', $placement);
-    }
-
-    /**
      * @param $uri
-     * @param $model
+     * @param $params
      * @return mixed
      */
-    protected function requestFromCentre($uri, $model)
+    public function find($uri, $params)
     {
-        return $this->makeRequest('post', $uri, ['OrganisationID' => $model->getCentreId()]);
+        return $this->makeRequest('get', $uri, $params);
+    }
+
+    /**
+     * @param       $uri
+     * @param array $params
+     * @return mixed
+     */
+    public function search($uri, array $params)
+    {
+        return collect($this->makeRequest('post', $uri, $params));
     }
 
     /**

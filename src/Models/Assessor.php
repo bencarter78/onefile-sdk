@@ -15,6 +15,11 @@ class Assessor extends Model
     protected $roles = [4, 5];
 
     /**
+     * @var array
+     */
+    protected $uris = ['search' => 'User/Search'];
+
+    /**
      * Assessor constructor.
      */
     public function __construct()
@@ -52,7 +57,8 @@ class Assessor extends Model
         return tap(collect(), function ($assessors) use ($params) {
             collect($this->roles)->each(function ($role) use ($assessors, $params) {
                 $params = array_merge(['Role' => $role], $params);
-                collect($this->onefile->searchUsers($params))->each(function ($user) use ($assessors) {
+                collect($this->onefile->search($this->uris['search'], $params))->each(function ($user) use ($assessors
+                ) {
                     if ($user != '') {
                         $assessors->push($user);
                     }

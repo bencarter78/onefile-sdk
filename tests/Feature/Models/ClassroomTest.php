@@ -40,4 +40,14 @@ class ClassroomTest extends TestCase
         $this->assertEquals($this->classroomId, $classroom->ID);
         $this->assertEquals('Customer Service Level 3', $classroom->Name);
     }
+
+    /** @test */
+    public function it_returns_a_centre_placement_from_a_given_name()
+    {
+        $classroom = new Classroom();
+        $classroom->setCentreId($this->centreId)->findByName($this->classroomName);
+
+        $this->assertEquals($this->classroomId, $classroom->ID);
+        $this->assertEquals('Customer Service Level 3', $classroom->Name);
+    }
 }

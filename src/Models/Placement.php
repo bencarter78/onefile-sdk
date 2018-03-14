@@ -5,6 +5,14 @@ namespace Onefile\Models;
 class Placement extends Model
 {
     /**
+     * @var array
+     */
+    protected $uris = [
+        'root' => 'Placement',
+        'search' => 'Placement/Search',
+    ];
+
+    /**
      * Placement constructor.
      */
     public function __construct()
@@ -17,7 +25,7 @@ class Placement extends Model
      */
     public function all()
     {
-        return collect($this->onefile->placements($this));
+        return collect($this->onefile->search($this->uris['search'], ['OrganisationID' => $this->getCentreId()]));
     }
 
     /**
@@ -26,7 +34,21 @@ class Placement extends Model
      */
     public function findById($id)
     {
-        $this->data = (array)$this->onefile->placement($id, $this->getCentreId());
+        $this->data = (array)$this->onefile->find("{$this->uris['root']}/$id", ['OrganisationID' => $this->getCentreId()]);
+
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function findByName($name)
+    {
+        $this->data = (array)$this->onefile->search($this->uris['search'], [
+            'OrganisationID' => $this->getCentreId(),
+            'Name' => $name,
+        ])->first();
 
         return $this;
     }

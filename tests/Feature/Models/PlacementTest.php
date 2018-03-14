@@ -6,6 +6,20 @@ use Onefile\Models\Placement;
 
 class PlacementTest extends TestCase
 {
+    /**
+     * The default placement ID
+     *
+     * @var int
+     */
+    protected $placementId = 375;
+
+    /**
+     * The default placement name
+     *
+     * @var string
+     */
+    protected $placementName = 'Default Placement';
+
     /** @test */
     public function it_returns_all_placements_linked_to_a_centre()
     {
@@ -19,12 +33,20 @@ class PlacementTest extends TestCase
     /** @test */
     public function it_returns_a_centre_placement_from_a_given_id()
     {
-        $placementId = 375; // Dummy default placement ID
-
         $placement = new Placement();
-        $placement->setCentreId($this->centreId)->findById($placementId);
+        $placement->setCentreId($this->centreId)->findById($this->placementId);
 
-        $this->assertEquals($placementId, $placement->ID);
-        $this->assertEquals('Default Placement', $placement->Name);
+        $this->assertEquals($this->placementId, $placement->ID);
+        $this->assertEquals($this->placementName, $placement->Name);
+    }
+
+    /** @test */
+    public function it_returns_a_centre_placement_from_a_given_name()
+    {
+        $placement = new Placement();
+        $placement->setCentreId($this->centreId)->findByName($this->placementName);
+
+        $this->assertEquals($this->placementId, $placement->ID);
+        $this->assertEquals($this->placementName, $placement->Name);
     }
 }
