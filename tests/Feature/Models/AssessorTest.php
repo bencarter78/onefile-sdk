@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Onefile\Exceptions\CentreNotFoundException;
 use Onefile\Models\Assessor;
 use Onefile\Exceptions\UserNotFoundException;
 

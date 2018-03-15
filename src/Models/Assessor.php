@@ -40,7 +40,7 @@ class Assessor extends Model
             'FirstName' => $firstName,
             'LastName' => $surname,
         ]));
-
+        
         if ($user->count() > 0) {
             return $user->first();
         }

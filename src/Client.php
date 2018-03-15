@@ -3,6 +3,10 @@
 namespace Onefile;
 
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Exception\ClientException;
+use Onefile\Exceptions\CentreNotFoundException;
+use Onefile\Exceptions\ClassroomNotFoundException;
+use Onefile\Exceptions\PlacementNotFoundException;
 
 class Client
 {
@@ -32,6 +36,9 @@ class Client
 
     /**
      * @return $this
+     * @throws CentreNotFoundException
+     * @throws ClassroomNotFoundException
+     * @throws PlacementNotFoundException
      */
     public function authenticate()
     {
@@ -46,6 +53,9 @@ class Client
      * @param $data
      * @param $role
      * @return mixed
+     * @throws CentreNotFoundException
+     * @throws ClassroomNotFoundException
+     * @throws PlacementNotFoundException
      */
     public function createAccount($data, $role)
     {
@@ -64,6 +74,9 @@ class Client
      * @param $uri
      * @param $params
      * @return mixed
+     * @throws CentreNotFoundException
+     * @throws ClassroomNotFoundException
+     * @throws PlacementNotFoundException
      */
     public function find($uri, $params)
     {
@@ -74,6 +87,9 @@ class Client
      * @param       $uri
      * @param array $params
      * @return mixed
+     * @throws CentreNotFoundException
+     * @throws ClassroomNotFoundException
+     * @throws PlacementNotFoundException
      */
     public function search($uri, array $params)
     {
@@ -86,17 +102,37 @@ class Client
      * @param array $formData
      * @param array $headers
      * @return mixed
+     * @throws CentreNotFoundException
+     * @throws ClassroomNotFoundException
+     * @throws PlacementNotFoundException
      */
     private function makeRequest($method, $uri, array $formData, $headers = [])
     {
-        $data = [
-            'headers' => $headers ?: $this->sessionHeader(),
-            'form_params' => $formData,
-        ];
+        try {
+            $response = $this->client->request($method, $uri, [
+                'headers' => $headers ?: $this->sessionHeader(),
+                'form_params' => $formData,
+            ]);
 
-        $response = $this->client->request($method, $uri, $data);
+            return $this->responseBodyContents($response);
+        } catch (ClientException $e) {
+            $response = json_decode($e->getResponse()->getBody()->getContents());
 
-        return $this->responseBodyContents($response);
+            switch ($response->code) {
+                case -11:
+                    throw new CentreNotFoundException($response->message);
+                    break;
+                case -57:
+                    throw new PlacementNotFoundException($response->message);
+                    break;
+                case -58:
+                    throw new ClassroomNotFoundException($response->message);
+                    break;
+                default;
+                    throw $e;
+            }
+        }
+
     }
 
     /**
