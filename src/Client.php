@@ -4,9 +4,8 @@ namespace Onefile;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ClientException;
-use Onefile\Exceptions\CentreNotFoundException;
-use Onefile\Exceptions\ClassroomNotFoundException;
-use Onefile\Exceptions\PlacementNotFoundException;
+use Onefile\Exceptions\NotFoundHttpException;
+use Onefile\Exceptions\StandardNotFoundException;
 
 class Client
 {
@@ -36,9 +35,7 @@ class Client
 
     /**
      * @return $this
-     * @throws CentreNotFoundException
-     * @throws ClassroomNotFoundException
-     * @throws PlacementNotFoundException
+     * @throws NotFoundHttpException
      */
     public function authenticate()
     {
@@ -53,9 +50,7 @@ class Client
      * @param $data
      * @param $role
      * @return mixed
-     * @throws CentreNotFoundException
-     * @throws ClassroomNotFoundException
-     * @throws PlacementNotFoundException
+     * @throws NotFoundHttpException
      */
     public function createAccount($data, $role)
     {
@@ -74,9 +69,7 @@ class Client
      * @param $uri
      * @param $params
      * @return mixed
-     * @throws CentreNotFoundException
-     * @throws ClassroomNotFoundException
-     * @throws PlacementNotFoundException
+     * @throws NotFoundHttpException
      */
     public function find($uri, $params)
     {
@@ -86,14 +79,22 @@ class Client
     /**
      * @param       $uri
      * @param array $params
-     * @return mixed
-     * @throws CentreNotFoundException
-     * @throws ClassroomNotFoundException
-     * @throws PlacementNotFoundException
+     * @return \Illuminate\Support\Collection
+     * @throws NotFoundHttpException
      */
     public function search($uri, array $params)
     {
         return collect($this->makeRequest('post', $uri, $params));
+    }
+
+    /**
+     * @param $uri
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public function post($uri)
+    {
+        return $this->makeRequest('post', $uri);
     }
 
     /**
@@ -102,11 +103,9 @@ class Client
      * @param array $formData
      * @param array $headers
      * @return mixed
-     * @throws CentreNotFoundException
-     * @throws ClassroomNotFoundException
-     * @throws PlacementNotFoundException
+     * @throws NotFoundHttpException
      */
-    private function makeRequest($method, $uri, array $formData, $headers = [])
+    private function makeRequest($method, $uri, array $formData = [], $headers = [])
     {
         try {
             $response = $this->client->request($method, $uri, [
@@ -116,20 +115,12 @@ class Client
 
             return $this->responseBodyContents($response);
         } catch (ClientException $e) {
-            $response = json_decode($e->getResponse()->getBody()->getContents());
+            if ($e->getCode() == 400) {
+                $this->handleBadRequest($e);
+            }
 
-            switch ($response->code) {
-                case -11:
-                    throw new CentreNotFoundException($response->message);
-                    break;
-                case -57:
-                    throw new PlacementNotFoundException($response->message);
-                    break;
-                case -58:
-                    throw new ClassroomNotFoundException($response->message);
-                    break;
-                default;
-                    throw $e;
+            if ($e->getCode() == 404) {
+                throw new NotFoundHttpException($e->getMessage());
             }
         }
 
@@ -156,6 +147,7 @@ class Client
 
     /**
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function getTokenId()
     {
@@ -168,9 +160,20 @@ class Client
 
     /**
      * @return array
+     * @throws NotFoundHttpException
      */
     protected function sessionHeader()
     {
         return ['X-TokenID' => $this->getTokenId()];
+    }
+
+    /**
+     * @param $e
+     * @throws NotFoundHttpException
+     */
+    private function handleBadRequest($e)
+    {
+        $response = json_decode($e->getResponse()->getBody()->getContents());
+        throw new NotFoundHttpException($response->message);
     }
 }

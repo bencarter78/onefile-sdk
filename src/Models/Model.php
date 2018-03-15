@@ -49,6 +49,67 @@ class Model
     }
 
     /**
+     * @return \Illuminate\Support\Collection
+     * @throws \Onefile\Exceptions\NotFoundHttpException
+     */
+    public function all()
+    {
+        return collect($this->onefile->search($this->uris['search'], ['OrganisationID' => $this->getCentreId()]));
+    }
+
+    /**
+     * @param $id
+     * @return $this
+     * @throws \Onefile\Exceptions\NotFoundHttpException
+     */
+    public function findById($id)
+    {
+        $this->data = (array)$this->onefile->find("{$this->uris['root']}/$id", ['OrganisationID' => $this->getCentreId()]);
+
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @return $this
+     * @throws \Onefile\Exceptions\NotFoundHttpException
+     */
+    public function findByName($name)
+    {
+        $this->data = (array)$this->onefile->search($this->uris['search'], [
+            'OrganisationID' => $this->getCentreId(),
+            'Name' => $name,
+        ])->first();
+
+        return $this;
+    }
+
+    /**
+     * @param $title
+     * @return $this
+     * @throws \Onefile\Exceptions\NotFoundHttpException
+     */
+    public function findByTitle($title)
+    {
+        $this->data = (array)$this->onefile->search($this->uris['search'], [
+            'OrganisationID' => $this->getCentreId(),
+            'Title' => $title,
+        ])->first();
+
+        return $this;
+    }
+
+    /**
+     * @param $params
+     * @return \Illuminate\Support\Collection
+     * @throws \Onefile\Exceptions\NotFoundHttpException
+     */
+    public function search($params)
+    {
+        return $this->onefile->search($this->uris['search'], $params);
+    }
+
+    /**
      * @param $property
      * @return mixed
      */

@@ -6,20 +6,6 @@ use Onefile\Models\Placement;
 
 class PlacementTest extends TestCase
 {
-    /**
-     * The default placement ID
-     *
-     * @var int
-     */
-    protected $placementId = 375;
-
-    /**
-     * The default placement name
-     *
-     * @var string
-     */
-    protected $placementName = 'Default Placement';
-
     /** @test */
     public function it_returns_all_placements_linked_to_a_centre()
     {

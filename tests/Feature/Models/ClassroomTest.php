@@ -6,20 +6,6 @@ use Onefile\Models\Classroom;
 
 class ClassroomTest extends TestCase
 {
-    /**
-     * Dummy default classroom ID
-     *
-     * @var int
-     */
-    protected $classroomId = 255;
-
-    /**
-     * Dummy default classroom name
-     *
-     * @var string
-     */
-    protected $classroomName = 'Customer Service Level 3';
-
     /** @test */
     public function it_returns_all_placements_linked_to_a_centre()
     {

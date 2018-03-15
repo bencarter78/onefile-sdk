@@ -4,7 +4,6 @@ namespace Onefile\Models;
 
 class Registrar extends Model
 {
-
     /**
      * @var array
      */
@@ -32,10 +31,10 @@ class Registrar extends Model
     /**
      * @param $applicant
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws \Onefile\Exceptions\NotFoundHttpException
      */
     private function requestAccountCreation($applicant, $role)
     {
         return $this->onefile->createAccount($applicant, $role);
-
     }
 }

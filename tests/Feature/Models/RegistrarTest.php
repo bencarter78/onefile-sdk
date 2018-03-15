@@ -2,11 +2,9 @@
 
 namespace Tests;
 
-use Onefile\Exceptions\ClassroomNotFoundException;
-use Onefile\Exceptions\PlacementNotFoundException;
 use Onefile\Models\Learner;
 use Onefile\Models\Registrar;
-use Onefile\Exceptions\CentreNotFoundException;
+use Onefile\Exceptions\NotFoundHttpException;
 
 class RegistrarTest extends TestCase
 {
@@ -30,7 +28,7 @@ class RegistrarTest extends TestCase
     /** @test */
     public function an_exception_is_thrown_if_a_centre_is_not_found()
     {
-        $this->expectException(CentreNotFoundException::class);
+        $this->expectException(NotFoundHttpException::class);
 
         $applicant = (object)[
             'FirstName' => 'Test',
@@ -47,7 +45,7 @@ class RegistrarTest extends TestCase
     /** @test */
     public function an_exception_is_thrown_if_a_classroom_is_not_found()
     {
-        $this->expectException(ClassroomNotFoundException::class);
+        $this->expectException(NotFoundHttpException::class);
 
         $applicant = (object)[
             'FirstName' => 'Test',
@@ -64,7 +62,7 @@ class RegistrarTest extends TestCase
     /** @test */
     public function an_exception_is_thrown_if_a_placement_is_not_found()
     {
-        $this->expectException(PlacementNotFoundException::class);
+        $this->expectException(NotFoundHttpException::class);
 
         $applicant = (object)[
             'FirstName' => 'Test',
