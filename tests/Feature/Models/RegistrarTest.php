@@ -14,6 +14,7 @@ class RegistrarTest extends TestCase
         $applicant = (object)[
             'FirstName' => 'Test',
             'LastName' => 'McTest',
+            'Email' => 'test@email.com',
             'OrganisationID' => 49, // Dummy centre on Beta environment
             'DefaultAssessorID' => 4371, // Dummy adviser on Beta environment (Carol Jones)
             'ClassroomID' => 255, // Dummy classroom from dummy centre on Beta environment (Customer Service Level 3)

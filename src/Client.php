@@ -57,6 +57,7 @@ class Client
         return $this->makeRequest('post', 'User', [
             'FirstName' => $data->FirstName,
             'LastName' => $data->LastName,
+            'Email' => $data->Email,
             'Role' => $role,
             'OrganisationID' => $data->OrganisationID,
             'DefaultAssessorID' => $data->DefaultAssessorID,
