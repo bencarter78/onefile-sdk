@@ -36,6 +36,7 @@ class Client
     /**
      * @return $this
      * @throws NotFoundHttpException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function authenticate()
     {
@@ -51,6 +52,7 @@ class Client
      * @param $role
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function createAccount($data, $role)
     {
@@ -71,6 +73,7 @@ class Client
      * @param $params
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function find($uri, $params)
     {
@@ -82,6 +85,7 @@ class Client
      * @param array $params
      * @return \Illuminate\Support\Collection
      * @throws NotFoundHttpException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function search($uri, array $params)
     {
@@ -92,6 +96,7 @@ class Client
      * @param $uri
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function post($uri)
     {
@@ -105,6 +110,7 @@ class Client
      * @param array $headers
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function makeRequest($method, $uri, array $formData = [], $headers = [])
     {
