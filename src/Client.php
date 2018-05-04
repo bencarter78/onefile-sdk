@@ -75,7 +75,7 @@ class Client
      * @throws NotFoundHttpException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function find($uri, $params)
+    public function find($uri, array $params = [])
     {
         return $this->makeRequest('get', $uri, $params);
     }

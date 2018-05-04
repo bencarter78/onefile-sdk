@@ -14,7 +14,12 @@ class LearningAim
     /**
      * @var array
      */
-    private $uris = ['search' => 'LearningAim/Search'];
+    private $uris = [
+        'root' => 'LearningAim',
+        'search' => 'LearningAim/Search',
+        'unitSearch' => 'Unit/Search',
+        'standard' => 'Standard',
+    ];
 
     /**
      * LearningAim constructor.
@@ -24,6 +29,28 @@ class LearningAim
     public function __construct(Client $client)
     {
         $this->client = $client;
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Onefile\Exceptions\NotFoundHttpException
+     */
+    public function find($id)
+    {
+        return $this->client->find($this->uris['root'] . "/$id");
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Onefile\Exceptions\NotFoundHttpException
+     */
+    public function standard($id)
+    {
+        return $this->client->find($this->uris['standard'] . "/$id");
     }
 
     /**
@@ -40,5 +67,16 @@ class LearningAim
             'DateFrom' => $from,
             'DateTo' => $to,
         ]);
+    }
+
+    /**
+     * @param $id The ID of the standard
+     * @return \Illuminate\Support\Collection
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Onefile\Exceptions\NotFoundHttpException
+     */
+    public function units($id)
+    {
+        return $this->client->search($this->uris['unitSearch'], ['StandardID' => $id]);
     }
 }

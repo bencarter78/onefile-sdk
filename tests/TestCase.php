@@ -28,4 +28,13 @@ class TestCase extends BaseTestCase
         parent::setUp();
         (new Dotenv(dirname(__DIR__)))->load();
     }
+
+    /**
+     * Remember to close down Mockery
+     */
+    public function tearDown()
+    {
+        parent::tearDown();
+        \Mockery::close();
+    }
 }

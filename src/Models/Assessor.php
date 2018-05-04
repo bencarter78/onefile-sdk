@@ -17,7 +17,10 @@ class Assessor extends Model
     /**
      * @var array
      */
-    protected $uris = ['search' => 'User/Search'];
+    protected $uris = [
+        'root' => 'User',
+        'search' => 'User/Search'
+    ];
 
     /**
      * Assessor constructor.
